@@ -1,0 +1,26 @@
+@EndUserText.label : 'Flight Reference Scenario: Managing Travels'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ytravel_tech_m {
+
+  key client      : abap.clnt not null;
+  key travel_id   : /dmo/travel_id not null;
+  agency_id       : /dmo/agency_id;
+  customer_id     : /dmo/customer_id;
+  begin_date      : /dmo/begin_date;
+  end_date        : /dmo/end_date;
+  @Semantics.amount.currencyCode : 'ytravel_tech_m.currency_code'
+  booking_fee     : /dmo/booking_fee;
+  @Semantics.amount.currencyCode : 'ytravel_tech_m.currency_code'
+  total_price     : /dmo/total_price;
+  currency_code   : /dmo/currency_code;
+  description     : /dmo/description;
+  overall_status  : /dmo/overall_status;
+  created_by      : abp_creation_user;
+  created_at      : abp_creation_tstmpl;
+  last_changed_by : abp_locinst_lastchange_user;
+  last_changed_at : abp_locinst_lastchange_tstmpl;
+
+}

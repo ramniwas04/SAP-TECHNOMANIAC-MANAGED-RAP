@@ -1,0 +1,16 @@
+@EndUserText.label : 'log table for travel'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ylog_travel_m {
+
+  key client         : abap.clnt not null;
+  key change_id      : abap.raw(16) not null;
+  travelid           : /dmo/travel_id not null;
+  changing_operation : abap.char(10);
+  changed_field_name : abap.char(32);
+  changed_value      : abap.char(32);
+  created_at         : timestampl;
+
+}

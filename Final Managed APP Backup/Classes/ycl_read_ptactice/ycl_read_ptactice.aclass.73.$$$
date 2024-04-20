@@ -1,0 +1,112 @@
+CLASS ycl_read_ptactice DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun .
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ycl_read_ptactice IMPLEMENTATION.
+  METHOD if_oo_adt_classrun~main.
+*sort form read
+
+*    READ ENTITY yi_travel_tech_m
+*     FROM VALUE #( ( %key-TravelId = '0000004172'
+*                     %control = VALUE #( AgencyId    = if_abap_behv=>mk-on
+*                                         CUSTOMERID  = if_abap_behv=>mk-on
+*                                         BEGINDATE   = if_abap_behv=>mk-on
+*                                         )
+*
+*          )
+*                    )
+*     RESULT DATA(lt_result_short)
+*     FAILED DATA(lt_failed_sort).
+*
+*    IF lt_failed_sort IS NOT INITIAL.
+*      out->write( 'Read failed' ).
+*
+*    ELSE.
+*      out->write( lt_result_short ).
+*    ENDIF.
+
+*    READ ENTITY yi_travel_tech_m
+*     by \_Booking
+*     ALL FIELDS
+*     WITH VALUE #( ( %key-TravelId = '0000004172'   )
+*                    ( %key-TravelId = '0000004136' )
+*                    )
+*     RESULT DATA(lt_result_short)
+*     FAILED DATA(lt_failed_sort).
+*
+*    IF lt_failed_sort IS NOT INITIAL.
+*      out->write( 'Read failed' ).
+*
+*    ELSE.
+*      out->write( lt_result_short ).
+*    ENDIF.
+
+
+    READ ENTITIES OF yi_travel_tech_m
+
+    ENTITY yi_travel_tech_m
+    ALL FIELDS
+    WITH VALUE #( ( %key-TravelId = '0000004172'   )
+                    ( %key-TravelId = '0000004136' )
+                    )
+     RESULT DATA(lt_result_travel)
+
+    ENTITY yi_booking_tech_m
+    ALL FIELDS WITH VALUE #( ( %key-TravelId = '0000004172'
+                               %key-BookingId = '0020'
+                                ) )
+     RESULT DATA(lt_result_book)
+
+     FAILED DATA(lt_failed_sort).
+
+    IF lt_failed_sort IS NOT INITIAL.
+      out->write( 'Read failed' ).
+
+    ELSE.
+      out->write( lt_result_travel ).
+      out->write( lt_result_book ).
+    ENDIF.
+    
+    DATA: it_optab         TYPE abp_behv_retrievals_tab,
+          it_travel        TYPE TABLE FOR READ IMPORT yi_travel_tech_m,
+          it_travel_result TYPE TABLE FOR READ RESULT  yi_travel_tech_m.
+
+    it_travel = VALUE #( ( %key-TravelId = '0000004172'
+                          %control = VALUE #( AgencyId    = if_abap_behv=>mk-on
+                                              CUSTOMERID  = if_abap_behv=>mk-on
+                                              BEGINDATE   = if_abap_behv=>mk-on
+                                         ) 
+                         ) ).
+                         
+    it_optab = VALUE #( (
+                          op = if_abap_behv=>op-r
+                          entity_name = 'YI_TRAVEL_TECH_M'
+                          instances = it_travel
+                          results = it_travel_result
+                          )
+                          (
+                          op = if_abap_behv=>op-r
+                          entity_name = 'YI_TRAVEL_TECH_M'
+                          sub_name   = '_BOOKING'
+                          instances = it_travel
+                          results = it_travel_result
+                          )
+
+
+                          )
+
+
+
+
+  ENDMETHOD.
+ENDCLASS.

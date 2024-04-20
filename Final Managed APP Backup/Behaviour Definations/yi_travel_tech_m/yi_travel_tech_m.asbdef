@@ -1,0 +1,125 @@
+managed implementation in class ybp_travel_tech_m unique;
+strict ( 2 );
+
+define behavior for YI_TRAVEL_TECH_M //alias <alias_name>
+implementation in class ybp_travel_tech_m unique
+persistent table ytravel_tech_m
+with additional save
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+early numbering
+{
+  field ( readonly ) TravelId, LastChangedBy, LastChangedAt, CreatedAt, CreatedBy;
+  field ( mandatory ) AgencyId, CustomerId, BeginDate, EndDate, OverallStatus, BookingFee, CurrencyCode;
+  action ( features : instance ) acceptTravel result [1] $self;
+  action ( features : instance ) rejectTravel result [1] $self;
+
+  factory action copyTravel [1];
+
+  internal action recalcTotPrice;
+  //☺☺☺☺☺
+  validation validateCustomer on save { create; field CustomerId; }
+  validation validateDates on save { create; field BeginDate, EndDate; }
+  validation validateStatus on save { create; field OverallStatus; }
+  validation validateCurrencyCode on save { create; field CurrencyCode; }
+  validation validateBookingFee on save { create; field BookingFee; }
+
+  determination calculateTotalPrice on modify { create; field BookingFee, CurrencyCode; }
+
+  create;
+  update;
+  delete;
+  association _Booking { create ( features : instance ); }
+  mapping for ytravel_tech_m
+    {
+      TravelId      = travel_id;
+      AgencyId      = agency_id;
+      CustomerId    = customer_id;
+      BeginDate     = begin_date;
+      EndDate       = end_date;
+      BookingFee    = booking_fee;
+      TotalPrice    = total_price;
+      CurrencyCode  = currency_code;
+      Description   = description;
+      OverallStatus = overall_status;
+      CreatedBy     = created_by;
+      CreatedAt     = created_at;
+      LastChangedBy = last_changed_by;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+define behavior for YI_BOOKING_TECH_M //alias <alias_name>
+implementation in class ybp_Booking_tech_m unique
+persistent table ybooking_tech_m
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId, LastChangedAt;
+  field ( mandatory ) CarrierId, ConnectionId, FlightDate, BookingStatus;
+  field ( mandatory : create, readonly : update ) BookingDate, CustomerId;
+
+  validation validateStatus on save { create; field BookingStatus; }
+  validation validateCustomer on save { create; field CustomerId; }
+  validation validateCurrencyCode on save { create; field CurrencyCode; }
+  validation validateConnection on save { create; field CarrierId, ConnectionId, FlightDate; }
+  validation validateFlightPrice on save { create; field FlightPrice; }
+
+  determination calculateTotalPrice on modify { create; field FlightPrice, CurrencyCode; }
+
+  association _Travel;
+  association _Bookingsuppl { create ( features : instance ); }
+  mapping for ybooking_tech_m
+    {
+      TravelId      = travel_id;
+      BookingId     = booking_id;
+      BookingDate   = booking_date;
+      CustomerId    = customer_id;
+      CarrierId     = carrier_id;
+      ConnectionId  = connection_id;
+      FlightDate    = flight_date;
+      FlightPrice   = flight_price;
+      CurrencyCode  = currency_code;
+      BookingStatus = booking_status;
+      LastChangedAt = last_changed_at;
+    }
+}
+
+define behavior for yI_BOOKSUPPL_TECH_M //alias <alias_name>
+implementation in class ybp_booksuppl_tech_m unique
+//persistent table ybooksupp_tech_m
+with unmanaged save with full data
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId, BookingSupplementId, LastChangedAt;
+  field ( mandatory ) Price, SupplementId;
+
+  validation validateCurrencyCode on save { create; field CurrencyCode; }
+  validation validateSupplement on save { create; field SupplementId; }
+  validation validatePrice on save { create; field price; }
+
+  determination calculateTotalPrice on modify { create; field Price, CurrencyCode; }
+  association _Travel;
+  association _Booking;
+  mapping for ybooksupp_tech_m
+    {
+      TravelId            = travel_id;
+      BookingId           = booking_id;
+      BookingSupplementId = booking_supplement_id;
+      SupplementId        = supplement_id;
+      Price               = price;
+      CurrencyCode        = currency_code;
+      LastChangedAt       = last_changed_at;
+    }
+
+}

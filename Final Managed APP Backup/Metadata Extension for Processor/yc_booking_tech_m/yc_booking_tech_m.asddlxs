@@ -1,0 +1,104 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+@UI.headerInfo: {
+    typeName: 'Booking',
+    typeNamePlural: 'Bookings',
+    title: {
+        type: #STANDARD,
+        label: 'Booking',
+        value: 'BookingId'
+    }
+}
+annotate view yC_BOOKING_TECH_M with
+{
+  @UI.facet: [{
+      id: 'Booking',
+      purpose: #STANDARD,
+      position: 10 ,
+      label: 'Booking',
+      type: #IDENTIFICATION_REFERENCE
+  },
+  {
+      id: 'BookingSuppl',
+      purpose: #STANDARD,
+      position: 20 ,
+      label: 'Booking Suppliments',
+      type: #LINEITEM_REFERENCE,
+      targetElement: '_Bookingsuppl'
+  }
+  ]
+  @Search.defaultSearchElement: true
+  TravelId;
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  @Search.defaultSearchElement: true
+  BookingId;
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  BookingDate;
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  @Search.defaultSearchElement: true
+  @Consumption.valueHelpDefinition: [{ entity: {
+      name: '/DMO/I_Customer',
+      element: 'CustomerID'
+  } }]
+  CustomerId;
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+  @Consumption.valueHelpDefinition: [{ entity: {
+      name: '/DMO/I_Carrier',
+      element: 'AirlineID'
+  } }]
+  CarrierId;
+  @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  @Consumption.valueHelpDefinition: [{ entity: {
+                                                  name: '/DMO/I_Flight',
+                                                 element: 'ConnectionId'
+                                                },
+      additionalBinding: [{ element: 'ConnectionId' , 
+                            localElement: 'ConnectionID'},
+                          { element: 'AirlineID' , 
+                            localElement: 'CarrierId'},   
+                          { element: 'CurrencyCode' , 
+                            localElement: 'CurrencyCode'},
+                          { element: 'Price' , 
+                            localElement: 'FlightPrice'}                                                                                   ]
+  }]  
+  ConnectionId;
+  @UI.lineItem: [{ position: 60 }]
+  @UI.identification: [{ position: 60 }]
+  @Consumption.valueHelpDefinition: [{ entity: {
+                                                  name: '/DMO/I_Flight',
+                                                 element: 'FlightDate'
+                                                },
+      additionalBinding: [{ element: 'FlightDate' , 
+                            localElement: 'FlightDate'},
+                          { element: 'AirlineID' , 
+                            localElement: 'CarrierId'},   
+                          { element: 'CurrencyCode' , 
+                            localElement: 'CurrencyCode'},
+                          { element: 'Price' , 
+                            localElement: 'FlightPrice'}                                                                                   ]
+  }]    
+  FlightDate;
+  @UI.lineItem: [{ position: 70 }]
+  @UI.identification: [{ position: 70 }]
+  FlightPrice;
+  @Consumption.valueHelpDefinition: [{ entity: {
+    name: 'I_Currency',
+    element: 'Currency'
+  } }]
+  CurrencyCode;
+  @UI.lineItem: [{ position: 80 }]
+  @UI.identification: [{ position: 80 }]
+  @UI.textArrangement: #TEXT_ONLY
+  @Consumption.valueHelpDefinition: [{ entity: {
+      name: '/DMO/I_Booking_Status_VH',
+      element: 'BookingStatus'
+  } }]
+  BookingStatus;
+  //      LastChangedAt;
+
+}

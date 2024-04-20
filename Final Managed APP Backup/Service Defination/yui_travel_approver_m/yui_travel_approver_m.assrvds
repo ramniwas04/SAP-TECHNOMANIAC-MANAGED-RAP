@@ -1,0 +1,11 @@
+@EndUserText.label: 'Approver Application'
+define service YUI_TRAVEL_Approver_M {
+  expose YC_TRAVEL_APPROVER_M;
+  expose YC_BOOKING_APPROVER_M;
+  expose /DMO/I_Customer_StdVH    as Passenger;
+  expose /DMO/I_Agency_StdVH      as TravelAgency;
+  expose I_CurrencyStdVH          as Currency;
+  expose I_CountryVH              as Country;
+  expose /DMO/I_Overall_Status_VH as OverallStatus;
+  expose /DMO/I_Booking_Status_VH as BookingStatus;
+}

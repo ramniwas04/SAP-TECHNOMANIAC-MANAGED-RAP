@@ -1,0 +1,40 @@
+CLASS ycl_read_ptactice DEFINITION
+*INHERITING FROM cl_demo_classrun
+  PUBLIC
+  ABSTRACT
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun .
+
+    DATA out TYPE REF TO if_demo_output .
+
+  methods MAIN
+  abstract .
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ycl_read_ptactice IMPLEMENTATION.
+
+  METHOD if_oo_adt_classrun~main.
+    me->out = CAST cl_oo_adt_classrun_output( out )->get_demo_output( ).
+    me->main( ). 
+*    READ ENTITY yi_travel_tech_m
+*     ALL FIELDS WITH VALUE #( ( %key-TravelId = '0000004170' ) )
+*     RESULT FINAL(lt_read_entity)
+*     FAILED FINAL(lt_failed).
+*    out->next_section( 'READ ENTITY bdef' ).
+*    IF lt_failed IS NOT INITIAL.
+*      out->write( 'Read failed' ).
+*    ELSE.
+*      out->write( lt_read_entity ).
+*    ENDIF.
+  ENDMETHOD.
+
+
+ENDCLASS.
